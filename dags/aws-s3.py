@@ -10,16 +10,19 @@ def list_s3_objects(**kwargs):
     session = boto3.Session()
     s3_client = session.client("s3", region_name="ap-southeast-1")
 
+    # Set up a logger for the task
+    logger = logging.getLogger("airflow.task")
+
     try:
         response = s3_client.list_objects_v2(Bucket=bucket_name)
         if "Contents" in response:
-            logging.info(f"Objects in bucket {bucket_name}:")
+            logger.info(f"Objects in bucket {bucket_name}:")
             for obj in response["Contents"]:
-                logging.info(obj["Key"])
+                logger.info(obj["Key"])
         else:
-            logging.info(f"No objects found in bucket {bucket_name}")
+            logger.info(f"No objects found in bucket {bucket_name}")
     except Exception as e:
-        logging.error(f"Error listing objects in bucket {bucket_name}: {e}")
+        logger.error(f"Error listing objects in bucket {bucket_name}: {e}")
 
 # Define default arguments
 default_args = {
