@@ -16,7 +16,7 @@ def list_s3_objects(**kwargs):
         if "Contents" in response:
             print(f"Objects in bucket {bucket_name}:")
             for obj in response["Contents"]:
-                print(obj["Key"])
+                print(obj["Key"], flush=True)
         else:
             print(f"No objects found in bucket {bucket_name}")
     except Exception as e:
