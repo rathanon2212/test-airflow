@@ -1,9 +1,8 @@
+import logging
 import boto3
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 from airflow.utils.dates import days_ago
-import boto3.session
-
 
 # Define the function to list S3 objects using boto3
 def list_s3_objects(**kwargs):
@@ -14,14 +13,13 @@ def list_s3_objects(**kwargs):
     try:
         response = s3_client.list_objects_v2(Bucket=bucket_name)
         if "Contents" in response:
-            print(f"Objects in bucket {bucket_name}:")
+            logging.info(f"Objects in bucket {bucket_name}:")
             for obj in response["Contents"]:
-                print(obj["Key"], flush=True)
+                logging.info(obj["Key"])
         else:
-            print(f"No objects found in bucket {bucket_name}")
+            logging.info(f"No objects found in bucket {bucket_name}")
     except Exception as e:
-        print(f"Error listing objects in bucket {bucket_name}: {e}")
-
+        logging.error(f"Error listing objects in bucket {bucket_name}: {e}")
 
 # Define default arguments
 default_args = {
